@@ -2,14 +2,15 @@ import React from "react";
 import { FiUser } from "react-icons/fi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useHistory } from "react-router-dom";
-import { userInLoggedIn } from "../../utils/authentication";
+import { logout, userInLoggedIn } from "../../utils/authentication";
 import "styled-components/macro";
+import { CustomPopover } from "../common/Popover";
 
 export default function Header() {
   const history = useHistory();
   return (
     <>
-      <div className='container h-12 mx-auto flex justify-between'>
+      <div className='container h-12 mx-auto flex justify-between items-center'>
         <div>
           <h2
             onClick={() => history.push("/")}
@@ -24,10 +25,50 @@ export default function Header() {
               <div className='bg-gray-200 px-2 py-2 rounded-full mr-2'>
                 <FiUser />
               </div>
-              <div>Niloy</div>
-              <div className='ml-1'>
-                <MdKeyboardArrowDown />
-              </div>
+              <CustomPopover
+                placement='bottom-start'
+                renderReference={(ref, toggle) => {
+                  return (
+                    <button
+                      ref={ref}
+                      onClick={() => {
+                        toggle();
+                      }}
+                      className='flex items-center text-gray-800'
+                    >
+                      <span className='mr-2'>Niloy</span>{" "}
+                      <MdKeyboardArrowDown size={20} />
+                    </button>
+                  );
+                }}
+                renderPopover={(toggle) => {
+                  return (
+                    <div
+                      className='border rounded shadow-lg '
+                      css={`
+                        z-index: 100;
+                        background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+                        box-sizing: border-box;
+                        overflow: auto;
+                        min-width: 184px;
+                        top: 15px !important;
+                      `}
+                    >
+                      <ul className='w-full'>
+                        <li
+                          onClick={() => {
+                            logout();
+                            toggle();
+                          }}
+                          className='w-full px-4 py-2 cursor-pointer hover:bg-gray-100'
+                        >
+                          {"Logout"}
+                        </li>
+                      </ul>
+                    </div>
+                  );
+                }}
+              />
             </div>
           ) : (
             <div
