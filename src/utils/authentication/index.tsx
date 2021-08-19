@@ -15,7 +15,7 @@ export const getTokenFromCookies = () => {
 export const logout = () => {
   Cookies.remove("_t");
   store.dispatch({ type: USER_LOGOUT, payload: false });
-  window.location.reload();
+  return true;
 };
 export const decodeToken = (token: string) => jwtDecode(token);
 export const setTokenToCookies = (token: string) => {

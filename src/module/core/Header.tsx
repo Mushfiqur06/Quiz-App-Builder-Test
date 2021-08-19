@@ -8,6 +8,14 @@ import { CustomPopover } from "../common/Popover";
 
 export default function Header() {
   const history = useHistory();
+
+  const _logout = () => {
+    const res = logout();
+    if (res) {
+      history.push("/");
+    }
+  };
+
   return (
     <>
       <div className='container h-12 mx-auto flex justify-between items-center'>
@@ -63,7 +71,7 @@ export default function Header() {
                         </li>
                         <li
                           onClick={() => {
-                            logout();
+                            _logout();
                             toggle();
                           }}
                           className='w-full px-4 py-2 cursor-pointer hover:bg-gray-100'
