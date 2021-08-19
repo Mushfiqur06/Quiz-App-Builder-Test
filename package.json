@@ -47,7 +47,10 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "typescript": "^4.3.5",
     "react-popper": "^2.2.3",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "twin.macro": "^1.6.3",
+    "twind": "^0.14.6",
+    "react-spinners": "^0.10.6"
   },
   "babelMacros": {
     "styledComponents": {
