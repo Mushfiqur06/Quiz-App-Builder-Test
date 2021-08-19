@@ -1,5 +1,9 @@
-import React from 'react';
-
 export default function Footer() {
-	return <h2>Ffooter</h2>;
+  return (
+    <>
+      <div className='text-center bg-gray-100 py-4 border-t '>
+        <p className='text-black'>&copy;Copyright of Mushfiqur Rahman Niloy</p>
+      </div>
+    </>
+  );
 }
