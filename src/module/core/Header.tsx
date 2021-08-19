@@ -56,6 +56,12 @@ export default function Header() {
                     >
                       <ul className='w-full'>
                         <li
+                          onClick={() => history.push("/dashboard")}
+                          className='w-full px-4 py-2 cursor-pointer hover:bg-gray-100'
+                        >
+                          {"Dashboard"}
+                        </li>
+                        <li
                           onClick={() => {
                             logout();
                             toggle();
