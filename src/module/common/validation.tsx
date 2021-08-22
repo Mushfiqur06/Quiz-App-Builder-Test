@@ -37,3 +37,5 @@ export const isArrayAndNotEmpty = compose(
     }
   }
 );
+
+export const rendomID = () => Math.floor(Math.random() * (100000 - 1)) + 1;

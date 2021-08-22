@@ -1,26 +1,29 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
-
 import { AuthRoute } from "./UnauthenticatedApp";
 import { PrivateRoute } from "./AuthanticatedApp";
 import Login from "../module/auth/containers/Login";
-import { AppConatiner } from "../module/core/App";
 import Dashboard from "../module/dashboard/container";
-import Movies from "../module/dashboard/components/Movies";
 import Home from "../module/Home/containers/Home";
 import QuizeDetails from "../module/quize/containers/Quize";
+import CreateQuize from "../module/dashboard/components/CreateQuize";
+import DashboardQuizeDetails from "../module/dashboard/components/QuizeDetails";
 
 class App extends Component {
   render() {
     return (
       <Switch>
-        <PrivateRoute path='/profile' component={AppConatiner} />
+        <Route exact path='/' component={Home} />
         <AuthRoute path='/auth/login' component={() => <Login />} />
-        <Route exact path='/' component={Dashboard} />
-        <Route exact path='/dashboard' component={Home} />
+        <PrivateRoute exact path='/dashboard' component={Dashboard} />
+        <PrivateRoute
+          exact
+          path='/dashboard/new-quize'
+          component={CreateQuize}
+        />
         <Route exact path='/quizes/:id' component={QuizeDetails} />
-        <Route path='/movies' component={Movies} />
+        <Route exact path='/dashboard/:id' component={DashboardQuizeDetails} />
       </Switch>
     );
   }
