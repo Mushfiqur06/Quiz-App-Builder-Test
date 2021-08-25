@@ -1,12 +1,15 @@
 import React from "react";
 import "styled-components/macro";
-import { quizeData } from "../../../data";
 import { isArrayAndNotEmpty } from "../../common/validation";
 import { BiMessageDetail } from "react-icons/bi";
 import { useHistory } from "react-router-dom";
 import { IQuizes } from "../constants/interface";
+import { useLocalStorage } from "react-use";
+
 export default function QuizeCategory() {
   const history = useHistory();
+  const [categories]: any = useLocalStorage("categories");
+
   return (
     <>
       <div
@@ -20,8 +23,8 @@ export default function QuizeCategory() {
             Quize Category
           </h2>
           <div className='grid grid-flow-row auto-rows-max grid-cols-3 gap-8'>
-            {isArrayAndNotEmpty(quizeData) ? (
-              quizeData.map((value: IQuizes, index: number) => (
+            {isArrayAndNotEmpty(categories) ? (
+              categories.map((value: IQuizes, index: number) => (
                 <div
                   key={index}
                   onClick={() => history.push(`/quizes/${value?.id}`)}

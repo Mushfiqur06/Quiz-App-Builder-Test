@@ -1,48 +1,67 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { quizeData } from "../../../data";
-import { rendomID } from "../../common/validation";
-import { Button } from "../../common/Button";
 import { useLocalStorage } from "react-use";
+import { Button } from "../../common/Button";
+import { rendomID } from "../../common/validation";
+import { IQuizes } from "../constants/interface";
 
-export default function CreateQuizeCategory({
+export default function EditQuizCategory({
   close,
   updateQuizCategory,
+  categoryID,
 }: {
   close: () => void;
   updateQuizCategory: any;
+  categoryID: number | null;
 }) {
   const [categories, setCategories]: any = useLocalStorage("categories", []);
-  const initialValues = {
-    name: "",
-    category: "",
-    author: "",
-    quizes: [],
-  };
+  const [category, setCategory] = React.useState<IQuizes | null>(null);
+
+  React.useEffect(() => {
+    const index = categories.findIndex(
+      (item: IQuizes) => item.id === categoryID
+    );
+    setCategory(categories[index]);
+  }, [categoryID]);
+
   return (
     <>
       <div>
         <Formik
-          initialValues={initialValues}
+          enableReinitialize
+          initialValues={{
+            name: category?.name ? category?.name : "",
+            category: category?.category ? category?.category : "",
+            author: category?.author ? category?.author : "",
+            quizes: [],
+          }}
           onSubmit={(values: any) => {
-            const reqBody: any = {
-              id: rendomID(),
+            // Finding Category Index
+            const index = categories.findIndex(
+              (item: IQuizes) => item.id === categoryID
+            );
+            // Existing categories
+            let existingCategories = categories ? categories : [];
+            console.log("existingCategories[index]", existingCategories[index]);
+            existingCategories[index] = {
+              id: category?.id,
               name: values.name,
               category: values.category,
               author: values.author,
               quizes: [],
             };
-            // quizeData.push(reqBody);
-
-            // Existing categories
-            let existingCategories = categories ? categories : [];
-            existingCategories?.push(reqBody);
 
             // Update or new local storage
             setCategories(existingCategories);
 
             // Update state
-            updateQuizCategory(reqBody);
+            updateQuizCategory({
+              id: category?.id,
+              name: values.name,
+              category: values.category,
+              author: values.author,
+              quizes: [],
+            });
 
             // Add quiz to local storage
             close();
@@ -62,7 +81,7 @@ export default function CreateQuizeCategory({
             return errors;
           }}
         >
-          {({ isSubmitting }) => (
+          {(formikBag) => (
             <Form>
               <div className=''>
                 <div className='mb-2'>
@@ -114,8 +133,8 @@ export default function CreateQuizeCategory({
               </div>
 
               <div className='mt-4 flex justify-end'>
-                <Button primary block isLoading={isSubmitting}>
-                  Submit
+                <Button primary block isLoading={formikBag.isSubmitting}>
+                  Update
                 </Button>
               </div>
             </Form>

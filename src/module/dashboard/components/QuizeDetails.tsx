@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { quizeData } from "../../../data";
 import { IQuizes } from "../../dashboard/constants/interface";
 import "styled-components/macro";
 import { isArrayAndNotEmpty } from "../../common/validation";
@@ -9,19 +8,32 @@ import Layout from "../../common/Layout";
 import { BsPlusSquare } from "react-icons/bs";
 import { Modal } from "../../common/Modal";
 import CreateQuize from "./CreateQuize";
+import { useLocalStorage } from "react-use";
 
 export default function DashboardQuizeDetails() {
+  let [categories]: any = useLocalStorage("categories");
   const { id }: any = useParams();
   const [quize, setQuize] = React.useState<IQuizes | any>({});
   const [createQuize, setCreateQuize] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    const index = quizeData.findIndex(
+    const index = categories.findIndex(
       (item: IQuizes) => item.id === Number(id)
     );
-    setQuize(quizeData[index]);
+    setQuize(categories[index]);
   }, [id]);
-  console.log(quize);
+
+  /**
+   * Method for update quiz
+   *
+   * @param newQuiz
+   */
+  function updateQuiz(newQuiz: any) {
+    setQuize({
+      ...quize,
+      quizes: [...quize.quizes, newQuiz],
+    });
+  }
 
   return (
     <Layout>
@@ -45,7 +57,7 @@ export default function DashboardQuizeDetails() {
                   font-size: 40px;
                 `}
               >
-                Quize Category: {quize?.category}
+                Quize Category: {quize?.name}
               </h2>
             </div>
             <div>
@@ -105,6 +117,7 @@ export default function DashboardQuizeDetails() {
         renderBody={() => {
           return (
             <CreateQuize
+              updateQuiz={updateQuiz}
               close={() => {
                 setCreateQuize(false);
               }}

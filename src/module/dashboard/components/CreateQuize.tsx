@@ -6,9 +6,17 @@ import { Button } from "../../common/Button";
 import { rendomID } from "../../common/validation";
 import { quizeData } from "../../../data";
 import { IQuizes } from "../constants/interface";
+import { useLocalStorage } from "react-use";
 
-export default function CreateQuize({ close }: { close: () => void }) {
+export default function CreateQuize({
+  close,
+  updateQuiz,
+}: {
+  close: () => void;
+  updateQuiz: any;
+}) {
   const { id }: any = useParams();
+  const [categories, setCategories]: any = useLocalStorage("categories");
 
   const initialValues = {
     question: "",
@@ -16,6 +24,7 @@ export default function CreateQuize({ close }: { close: () => void }) {
     answerTwo: "",
     answerThree: "",
     answerFour: "",
+    rightAnswer: "",
   };
 
   return (
@@ -33,12 +42,20 @@ export default function CreateQuize({ close }: { close: () => void }) {
                 values.answerThree,
                 values.answerFour,
               ],
+              rightAnswer: "",
             };
-            const index = quizeData.findIndex(
-              (item: IQuizes) => item.id === Number(id)
+
+            const foundIndex = categories.findIndex(
+              (category: any) => category.id === Number(id)
             );
-            const findQuize = quizeData[index];
-            findQuize.quizes.push(reqBody);
+
+            // Update Quiz
+            categories[foundIndex].quizes.push(reqBody);
+            setCategories(categories);
+
+            // Update quiz state
+            updateQuiz(reqBody);
+
             close();
           }}
           validate={(values) => {
@@ -57,6 +74,9 @@ export default function CreateQuize({ close }: { close: () => void }) {
             }
             if (!values.answerFour) {
               errors.answerFour = "Answer is Required";
+            }
+            if (!values.rightAnswer) {
+              errors.rightAnswer = "Right Answer is Required";
             }
             return errors;
           }}
@@ -135,6 +155,21 @@ export default function CreateQuize({ close }: { close: () => void }) {
                   </label>
                   <ErrorMessage
                     name='answerFour'
+                    component='p'
+                    className='text-xs text-red-500'
+                  />
+                </div>
+                <div className='mb-2'>
+                  <label>
+                    <span>Right Answer</span>
+                    <Field
+                      name='rightAnswer'
+                      className='form-input p-2 rounded bg-gray-200 w-full outline-none '
+                      placeholder='Right Answer'
+                    />
+                  </label>
+                  <ErrorMessage
+                    name='rightAnswer'
                     component='p'
                     className='text-xs text-red-500'
                   />
