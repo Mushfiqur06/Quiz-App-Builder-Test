@@ -42,7 +42,7 @@ export default function CreateQuize({
                 values.answerThree,
                 values.answerFour,
               ],
-              rightAnswer: "",
+              rightAnswer: values.rightAnswer,
             };
 
             const foundIndex = categories.findIndex(
