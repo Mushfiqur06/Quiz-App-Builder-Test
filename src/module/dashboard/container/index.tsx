@@ -32,11 +32,22 @@ export default function Dashboard() {
     setQuizCategories(categories);
   }, [categories]);
 
-  function updateQuizCategory(category: any) {
-    const updateCats = [...quizCategories, category];
-    console.log(updateCats);
-    setQuizCategories(updateCats);
-  }
+  const updateQuizCategory = (category: any, editCat = false) => {
+    if (editCat) {
+      const findIndex = quizCategories.findIndex(
+        (cat: any) => cat.id === category.id
+      );
+
+      quizCategories[findIndex] = {
+        ...category,
+      };
+
+      setQuizCategories([...quizCategories]);
+    } else {
+      const updateCats = [...quizCategories, category];
+      setQuizCategories(updateCats);
+    }
+  };
 
   const handleCategoryRemoveOpen = (id: number, isRemove: boolean) => {
     setIsCategoryRemove(isRemove);

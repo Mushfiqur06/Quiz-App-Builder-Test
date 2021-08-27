@@ -2,7 +2,6 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import { useLocalStorage } from "react-use";
 import { Button } from "../../common/Button";
-import { rendomID } from "../../common/validation";
 import { IQuizes } from "../constants/interface";
 
 export default function EditQuizCategory({
@@ -42,26 +41,28 @@ export default function EditQuizCategory({
             );
             // Existing categories
             let existingCategories = categories ? categories : [];
-            console.log("existingCategories[index]", existingCategories[index]);
             existingCategories[index] = {
               id: category?.id,
               name: values.name,
               category: values.category,
               author: values.author,
-              quizes: [],
+              quizes: [...existingCategories[index].quizes],
             };
 
             // Update or new local storage
             setCategories(existingCategories);
 
             // Update state
-            updateQuizCategory({
-              id: category?.id,
-              name: values.name,
-              category: values.category,
-              author: values.author,
-              quizes: [],
-            });
+            updateQuizCategory(
+              {
+                id: category?.id,
+                name: values.name,
+                category: values.category,
+                author: values.author,
+                quizes: [...existingCategories[index].quizes],
+              },
+              true
+            );
 
             // Add quiz to local storage
             close();
