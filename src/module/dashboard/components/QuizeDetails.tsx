@@ -10,12 +10,16 @@ import { Modal } from "../../common/Modal";
 import CreateQuize from "./CreateQuize";
 import { useLocalStorage } from "react-use";
 import { Form, Formik } from "formik";
+import { Button } from "../../common/Button";
 
 export default function DashboardQuizeDetails() {
   let [categories]: any = useLocalStorage("categories");
   const { id }: any = useParams();
-  const [quize, setQuize] = React.useState<IQuizes | any>({});
+  const [quize, setQuize]: any = React.useState<IQuizes | any>({});
   const [createQuize, setCreateQuize] = React.useState<boolean>(false);
+  const [quizAns, setQuizAns]: any = React.useState([]);
+  const [correctAns, setCorrectAns]: any = React.useState(0);
+  const [wrongAns, setWrongAns]: any = React.useState(0);
 
   React.useEffect(() => {
     const index = categories.findIndex(
@@ -35,18 +39,6 @@ export default function DashboardQuizeDetails() {
       quizes: [...quize.quizes, newQuiz],
     });
   }
-
-  const userSelection = () => {
-    const initialValues = [];
-    const index = categories.findIndex(
-      (item: IQuizes) => item.id === Number(id)
-    );
-    for (let i = 0; i < categories[index].quizes.length; i++) {
-      initialValues.push([{ question: i, answer: "" }]);
-    }
-
-    return initialValues;
-  };
 
   return (
     <Layout>
@@ -90,29 +82,62 @@ export default function DashboardQuizeDetails() {
             `}
           >
             <Formik
-              initialValues={userSelection()}
-              onSubmit={(values) => {
-                console.log(values);
+              initialValues={{
+                answer: "",
+              }}
+              onSubmit={(values: any) => {
+                const keys = Object.keys(values);
+
+                const correctAnswer: any = [];
+                let countOfCorrectAns = 0;
+                let countOfWrongAns = 0;
+
+                keys.map((key) => {
+                  let quizeNumber = key.split("-");
+                  if (quizeNumber.length === 2) {
+                    const actualAns =
+                      quize.quizes[Number(quizeNumber[1])].rightAnswer;
+                    if (actualAns === values[`quiz-${quizeNumber[1]}`]) {
+                      correctAnswer.push({
+                        question: quize.quizes[Number(quizeNumber[1])].question,
+                        result: "Correct",
+                      });
+                      countOfCorrectAns++;
+                    } else {
+                      correctAnswer.push({
+                        question: quize.quizes[Number(quizeNumber[1])].question,
+                        result: "Wrong",
+                      });
+                      countOfWrongAns++;
+                    }
+                  }
+                });
+
+                setCorrectAns(countOfCorrectAns);
+                setWrongAns(countOfWrongAns);
+                setQuizAns(correctAnswer);
               }}
             >
               {(formikBag) => (
                 <Form>
                   <div>
                     {isArrayAndNotEmpty(quize?.quizes) ? (
-                      quize?.quizes.map((value: any, index: number) => (
-                        <div className='p-8 shadow rounded mb-6' key={index}>
+                      quize?.quizes.map((value: any, indexQuestion: number) => (
+                        <div
+                          className='p-8 shadow rounded mb-6'
+                          key={indexQuestion}
+                        >
                           <h3 className='text-xl font-medium mb-2'>
                             Q: {value?.question}
                           </h3>
                           <div className='pl-6'>
                             {value?.answer.map((val: any, index: number) => (
                               <div className='form-check' key={index}>
-                                {console.log(formikBag.values[index])}
                                 <input
                                   type='radio'
                                   id={val}
                                   className='form-check-input mr-1'
-                                  name={val}
+                                  name={`quiz-${indexQuestion}`}
                                   value={val}
                                   onChange={formikBag.handleChange}
                                   onBlur={formikBag.handleBlur}
@@ -136,6 +161,24 @@ export default function DashboardQuizeDetails() {
                         <p className='font-semibold leading-relaxed text-gray-700'>
                           No Quize Found
                         </p>
+                      </div>
+                    )}
+
+                    <div className='mt-4 flex justify-end'>
+                      <Button primary small>
+                        Submit
+                      </Button>
+                    </div>
+
+                    {quizAns.length > 0 && (
+                      <div>
+                        {quizAns.map((ans: any) => (
+                          <p key={ans.question}>
+                            {ans.question}: {ans.result}
+                          </p>
+                        ))}
+                        <h5>Correct Ans: {correctAns}</h5>
+                        <h5>Wrong Ans: {wrongAns}</h5>
                       </div>
                     )}
                   </div>
