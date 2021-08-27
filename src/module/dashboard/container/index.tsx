@@ -77,8 +77,9 @@ export default function Dashboard() {
     <>
       <Layout>
         <div
-          className='h-screen'
+          className=''
           css={`
+            height: calc(100vh - 115px);
             padding: 70px 0;
           `}
         >

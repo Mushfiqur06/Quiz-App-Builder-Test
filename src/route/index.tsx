@@ -23,7 +23,11 @@ class App extends Component {
           component={CreateQuize}
         />
         <Route exact path='/quizes/:id' component={QuizeDetails} />
-        <Route exact path='/dashboard/:id' component={DashboardQuizeDetails} />
+        <PrivateRoute
+          exact
+          path='/dashboard/:id'
+          component={DashboardQuizeDetails}
+        />
       </Switch>
     );
   }

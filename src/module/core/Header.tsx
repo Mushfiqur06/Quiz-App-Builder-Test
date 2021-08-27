@@ -17,8 +17,8 @@ export default function Header() {
   };
 
   return (
-    <>
-      <div className='container h-12 mx-auto flex justify-between items-center'>
+    <div className='border-b'>
+      <div className='container h-14 mx-auto flex justify-between items-center'>
         <div>
           <h2
             onClick={() => history.push("/")}
@@ -94,6 +94,6 @@ export default function Header() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

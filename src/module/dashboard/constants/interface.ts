@@ -9,6 +9,7 @@ interface IQuizesDetails {
   id: number;
   question: string;
   answer: any[];
+  rightAnswer: string;
 }
 
 export interface IQuizes {
@@ -16,5 +17,5 @@ export interface IQuizes {
     name: string;
     category: string;
     author: string;
-    quizes: any[];
+    quizes: IQuizesDetails;
 }
